@@ -63,10 +63,7 @@ namespace seneca {
         // Remove quotes
         if (!id.empty() && id.front() == '"' && id.back() == '"')
             id = id.substr(1, id.size() - 2);
-        if (!title.empty() && title.front() == '"' && title.back() == '"')
-            title = title.substr(1, title.size() - 2);
-        if (!summary.empty() && summary.front() == '"' && summary.back() == '"')
-            summary = summary.substr(1, summary.size() - 2);
+        
 
         for (size_t i = 0; i < col.size(); ++i) {
             auto* ptr = dynamic_cast<TvShow*>(col[i]);
