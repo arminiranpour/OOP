@@ -29,10 +29,7 @@ namespace seneca {
         // Remove quotes from id and title
         if (!id.empty() && id.front() == '"' && id.back() == '"')
             id = id.substr(1, id.size() - 2);
-        if (!title.empty() && title.front() == '"' && title.back() == '"')
-            title = title.substr(1, title.size() - 2);
-        if (!summary.empty() && summary.front() == '"' && summary.back() == '"')
-            summary = summary.substr(1, summary.size() - 2);
+        
 
         unsigned short year = static_cast<unsigned short>(std::stoi(yearStr));
         return new TvShow(id, title, year, summary);
@@ -42,13 +39,17 @@ namespace seneca {
         if (g_settings.m_tableView) {
             out << "S | ";
             out << std::left << std::setfill('.');
-            out << std::setw(50) << ("\"" + this->getTitle() + "\"") << " | ";
+            out << std::setw(50) << this->getTitle() << " | ";
             out << std::right << std::setfill(' ');
             out << std::setw(2) << m_episodes.size() << " | ";
             out << std::setw(4) << this->getYear() << " | ";
             out << std::left;
             if (g_settings.m_maxSummaryWidth > -1) {
                 std::string printedSummary = this->getSummary();
+                if (!printedSummary.empty() && printedSummary.front() == '"' &&
+                    printedSummary.back() == '"') {
+                    printedSummary = printedSummary.substr(1, printedSummary.size() - 2);
+                }
                 if ((short)printedSummary.size() > g_settings.m_maxSummaryWidth) {
                     size_t trimLen = g_settings.m_maxSummaryWidth - 3;
                     printedSummary = printedSummary.substr(0, trimLen);
@@ -58,9 +59,7 @@ namespace seneca {
                         printedSummary = printedSummary.substr(0, lastSpace + 1);  // include the space
 
 
-                    // remove any trailing spaces only
-                    while (!printedSummary.empty() && printedSummary.back() == ' ')
-                        printedSummary.pop_back();
+                   
                     printedSummary += "...";
                 } else {
                     // Ensure the summary is trimmed properly
@@ -75,8 +74,12 @@ namespace seneca {
                 }
 
             } else {
-                out << "\"" << this->getSummary() << "\"";
-            }
+                std::string printedSummary = this->getSummary();
+                if (!printedSummary.empty() && printedSummary.front() == '"' &&
+                    printedSummary.back() == '"') {
+                    printedSummary = printedSummary.substr(1, printedSummary.size() - 2);
+                }
+                out << "\"" << printedSummary << "\"";            }
 
 
             out << std::endl;
